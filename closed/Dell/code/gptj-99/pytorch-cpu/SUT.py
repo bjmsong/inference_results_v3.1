@@ -21,8 +21,12 @@ import mlperf_loadgen as lg
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("SUT")
 
+
 class Consumer(mp.Process):
-    def __init__(self, model_checkpoint_path="", precision="int8", quantized_model="", dataset_path="", input_queue=None, out_queue=None, lock=None, cond_var=None, init_counter=None, proc_idx=None, start_core_idx=0, cpus_per_proc=56, workers_per_proc=1, warmup=False, total_sample_count=1000, pad_inputs=False, input_lens=None, batch_size=1):
+    def __init__(self, model_checkpoint_path="", precision="int8", quantized_model="", dataset_path="", 
+                input_queue=None, out_queue=None, lock=None, cond_var=None, init_counter=None, proc_idx=None, 
+                start_core_idx=0, cpus_per_proc=56, workers_per_proc=1, warmup=False, total_sample_count=1000, 
+                pad_inputs=False, input_lens=None, batch_size=1):
 
         mp.Process.__init__(self)
         self.num_workers = workers_per_proc
@@ -112,7 +116,7 @@ class Consumer(mp.Process):
                 self.terminate()
                 sys.exit(1)
 
-
+                
     def run(self):
         #self.proc_idx = self.pid
         os.sched_setaffinity(0, self.affinity)
@@ -262,7 +266,11 @@ class SUT(object):
 
         start_core = self.initial_core
         for proc_idx in range(self.num_proc):
-            self.procs[proc_idx] = Consumer(self.model_checkpoint_path, self.precision, self.quantized_model, self.dataset_path, self.input_queue, self.output_queue, self.lock, self.cv, self.init_counter, proc_idx, start_core, self.cpus_per_proc, self.workers_per_proc, warmup=self.warmup, total_sample_count = self.total_sample_count, pad_inputs=self.pad_inputs, input_lens=self.input_lens if proc_idx==0 else None, batch_size = self.batch_size)
+            self.procs[proc_idx] = Consumer(self.model_checkpoint_path, self.precision, self.quantized_model, 
+            self.dataset_path, self.input_queue, self.output_queue, self.lock, self.cv, self.init_counter, 
+            proc_idx, start_core, self.cpus_per_proc, self.workers_per_proc, warmup=self.warmup, 
+            total_sample_count = self.total_sample_count, pad_inputs=self.pad_inputs, 
+            input_lens=self.input_lens if proc_idx==0 else None, batch_size = self.batch_size)
 
             start_core += self.cpus_per_proc
 

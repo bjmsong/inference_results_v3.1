@@ -5,12 +5,14 @@ def getArgs():
 
     parser = ArgumentParser("Parses global and workload-specific arguments")
     parser.add_argument("--workload-name", help="Name of workload", required=True)
-    parser.add_argument("--scenario", choices=["Offline", "Server", "SingleStream"], help="MLPerf scenario to run", default="Offline")
+    parser.add_argument("--scenario", choices=["Offline", "Server", "SingleStream"], help="MLPerf scenario to run", 
+                        default="Offline")
     parser.add_argument("--mlperf-conf", help="Path to mlperf.conf file")
     parser.add_argument("--user-conf", help="Path to user.conf file containing overridden workload params")
     parser.add_argument("--mode", choices=["Accuracy", "Performance"], help="MLPerf mode to run", default="Performance")
     parser.add_argument("--num-proc", type=int, help="Number of instances/consumers", default=2)
     parser.add_argument("--cpus-per-proc", type=int, help="Number of cores per instance", default=8)
+    # 如果在命令行中包含 --warmup 选项，则 args.warmup 会被设置为 True；如果不包含，则会为False
     parser.add_argument("--warmup", action="store_true", help="Whether to do warmup")
     parser.add_argument("--precision", choices=["int8", "bf16", "fp32", "mix", "int4_bf16_mixed"], help="Model precision to run", default="fp32")
     parser.add_argument("--workers-per-instance", type=int, help="Number of workers per each instance/consumer", default = 1)

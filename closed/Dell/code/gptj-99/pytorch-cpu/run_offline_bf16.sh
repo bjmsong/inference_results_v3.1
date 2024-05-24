@@ -1,20 +1,24 @@
 #!/bin/bash
 
+# Setup MKL Variables
 export KMP_BLOCKTIME=1
 export KMP_AFFINITY=granularity=fine,compact,1,0
+# 添加动态库: libiomp5.so(Intel OpenMP), libtcmalloc.so
 export LD_PRELOAD=${LD_PRELOAD}:${CONDA_PREFIX}/lib/libiomp5.so
 export LD_PRELOAD=${LD_PRELOAD}:${CONDA_PREFIX}/lib/libtcmalloc.so
 
 export num_physical_cores=`lscpu -b -p=Core,Socket | grep -v '^#' | sort -u | wc -l`
+# 获取NUMA节点数量
 num_numa=$(numactl --hardware|grep available|awk -F' ' '{ print $2 }')
 
 export USE_TPP=1
 
+# 没找到user_config.py
 python ../../user_config.py
 USER_CONF=user.conf
 
 NUM_PROC=2 #$num_numa
-CPUS_PER_PROC=56 #$((num_physical_cores/num_numa))
+CPUS_PER_PROC=8 #$((num_physical_cores/num_numa))
 WORKERS_PER_PROC=1
 TOTAL_SAMPLE_COUNT=13368
 BATCH_SIZE=16
