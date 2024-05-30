@@ -169,7 +169,9 @@ class Consumer(mp.Process):
 
 
 class SUT(object):
-    def __init__(self, num_proc, cpus_per_proc, model_checkpoint_path, initial_core=0, batch_size=1, dataset_path=None, workers_per_proc=1, warmup=False, precision="int8", quantized_model=None, total_sample_count=1000, pad_inputs=False):
+    def __init__(self, num_proc, cpus_per_proc, model_checkpoint_path, initial_core=0, 
+    batch_size=1, dataset_path=None, workers_per_proc=1, warmup=False, precision="int8", 
+    quantized_model=None, total_sample_count=1000, pad_inputs=False):
 
         self.num_proc = num_proc
         self.cpus_per_proc = cpus_per_proc

@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "python": "/root/miniconda3/envs/gpt-j-env/bin/python",
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "closed/Dell/code/gptj-99/pytorch-cpu/runner.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--workload-name=workload-name",
+                "--scenario=Offline",
+                "--mode=Performance",
+                "--num-proc=2",
+                "--cpus-per-proc=8",
+                "--model-checkpoint-path=/root/autodl-tmp/model/checkpoint-final/",
+                "--dataset-path=/root/project/inference/language/gpt-j/data/cnn_eval.json",
+                "--batch-size=16",
+                "--mlperf-conf=mlperf.conf",
+                "--user-conf=user.conf",
+                "--precision=bf16",
+                "--warmup",
+                "--workers-per-proc=1",
+                "--total-sample-count=13368",
+                "--output-dir=offline-output-debug"
+            ]   
+        }
+    ]
+}

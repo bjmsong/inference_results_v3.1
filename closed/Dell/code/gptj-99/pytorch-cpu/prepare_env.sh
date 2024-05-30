@@ -2,10 +2,12 @@
 
 CONDA_ENV_NAME=$1
 
+# 在执行每个命令之前，先将其显示到标准错误输出（通常是终端）
 set -x
 
 INC_VERSION=a2931eaa4052eec195be3c79a13f7bfa23e54473
 
+# 获取脚本所在目录的绝对路径
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 
 export WORKDIR=${DIR}/${CONDA_ENV_NAME}
@@ -22,8 +24,8 @@ conda create -n ${CONDA_ENV_NAME} python=3.9 --yes
 conda init bash
 conda activate ${CONDA_ENV_NAME}
 
-
-conda install mkl==2023.2.0 mkl-include==2023.2.0 -y
+# 如果安装不成功，通过conda search查找版本
+conda install mkl==2023.1.0 mkl-include==2023.1.0 -y
 conda install gperftools==2.10 jemalloc==5.2.1 pybind11==2.10.4 llvm-openmp==16.0.6 -c conda-forge -y
 conda install gcc=12.3 gxx=12.3 ninja==1.11.1 -c conda-forge -y
 
