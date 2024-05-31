@@ -18,7 +18,7 @@ fi
 echo "Working directory is ${WORKDIR}"
 mkdir -p ${WORKDIR}
 
-source ${HOME}/miniconda3/bin/activate
+source ${HOME}/autodl-tmp/miniconda3/bin/activate
 
 conda create -n ${CONDA_ENV_NAME} python=3.9 --yes
 conda init bash
@@ -31,15 +31,19 @@ conda install gcc=12.3 gxx=12.3 ninja==1.11.1 -c conda-forge -y
 
 pip install setuptools==58.2.0
 # ========== Install INC deps ===========
+# pip install 会把package依赖的package也装上
 python -m pip install cmake==3.27.0 cpuid==0.0.11 nltk==3.8.1 evaluate==0.4.0 protobuf==3.20.3 absl-py==1.4.0 rouge-score==0.1.2 tqdm==4.65.0 numpy==1.25.2 cython==3.0.0 sentencepiece==0.1.99 accelerate==0.21.0 # opencv-python-headless==4.5.5.64
 pip install git+https://github.com/intel/neural-compressor.git@${INC_VERSION}
 
 
 # ========== Install torch ===========
-pip3 install --pre torch==2.1.0.dev20230711+cpu torchvision==0.16.0.dev20230711+cpu torchaudio==2.1.0.dev20230711+cpu --index-url https://download.pytorch.org/whl/nightly/cpu
+# --pre 安装预发行版本
+# 前面已经安装torch了，这个先注释掉
+# pip3 install --pre torch==2.2.0.dev20231010+cpu torchvision==0.16.0.dev20230711+cpu torchaudio==2.2.0.dev20231010+cpu --index-url https://download.pytorch.org/whl/nightly/cpu
 ABI=$(python -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
 
 # ========== Build llvm-13 =========
+# llvm: 编译器框架和工具链
 cd ${WORKDIR}
 mkdir llvm-project && cd llvm-project
 wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/cmake-16.0.6.src.tar.xz
@@ -51,7 +55,7 @@ LLVM_SRC=${PWD}
 mkdir build && cd build
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=${ABI}" -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_ENABLE_TERMINFO=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_BUILD_LLVM_DYLIB=ON ../llvm/
 
-cmake --build . -j $(nproc)
+cmake --build . -j $(nproc)·
 LLVM_ROOT=${LLVM_SRC}/release
 if [ -d ${LLVM_ROOT} ]; then
     rm -rf ${LLVM_ROOT}
@@ -69,8 +73,10 @@ git clone --branch llm_feature_branch https://github.com/intel/intel-extension-f
 cd ipex-cpu
 export IPEX_DIR=${PWD}
 git submodule sync
+# 子模块没有安装全
 git submodule update --init --recursive
 cp ${DIR}/llm_feature_updated.diff .
+# 没有选择yes
 patch -p1 < llm_feature_updated.diff
 
 export DNNL_GRAPH_BUILD_COMPILER_BACKEND=1
@@ -96,6 +102,7 @@ pip install transformers==4.28.1
 
 # ============ Install loadgen ==========
 cd ${WORKDIR}
+# 硬盘没有空间了
 git clone https://github.com/mlcommons/inference.git mlperf_inference
 cd mlperf_inference
 export MLPERF_INFERENCE_ROOT=${PWD}
