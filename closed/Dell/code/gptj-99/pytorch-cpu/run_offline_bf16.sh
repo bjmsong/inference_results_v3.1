@@ -13,7 +13,6 @@ num_numa=$(numactl --hardware|grep available|awk -F' ' '{ print $2 }')
 
 export USE_TPP=1
 
-# 没找到user_config.py
 python ../../user_config.py
 USER_CONF=user.conf
 
@@ -25,6 +24,8 @@ BATCH_SIZE=16
 TIMESTAMP=$(date +%m-%d-%H-%M)
 HOSTNAME=$(hostname)
 OUTPUT_DIR=offline-output-${HOSTNAME}-batch-${BATCH_SIZE}-procs-${NUM_PROC}-ins-per-proc-${WORKERS_PER_PROC}-${TIMESTAMP}
+CHECKPOINT_DIR=/root/autodl-tmp/model/checkpoint-final/
+VALIDATION_DATA_JSON=data/cnn_eval.json
 
 python runner.py --workload-name gptj \
 	--scenario Offline \

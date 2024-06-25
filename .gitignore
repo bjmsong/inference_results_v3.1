@@ -1,1 +1,6 @@
 closed/Dell/code/gptj-99/pytorch-cpu/gpt-j-env
+closed/Dell/code/gptj-99/pytorch-cpu/__pycache__
+closed/Dell/code/gptj-99/pytorch-cpu/*.log
+closed/Dell/code/gptj-99/pytorch-cpu/log
+closed/Dell/code/gptj-99/pytorch-cpu/utils/build
+closed/Dell/code/gptj-99/pytorch-cpu/utils/thread_binder.egg-info

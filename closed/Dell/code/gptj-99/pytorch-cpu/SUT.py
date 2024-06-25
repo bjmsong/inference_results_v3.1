@@ -11,6 +11,7 @@ import logging
 import collections
 
 from item import InputItem, OutputItem
+# Intel TBB库的一部分
 import thread_binder
 
 #from dataset import Dataset

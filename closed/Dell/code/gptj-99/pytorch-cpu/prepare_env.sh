@@ -18,7 +18,7 @@ fi
 echo "Working directory is ${WORKDIR}"
 mkdir -p ${WORKDIR}
 
-source ${HOME}/autodl-tmp/miniconda3/bin/activate
+source ${HOME}/miniconda3/bin/activate
 
 conda create -n ${CONDA_ENV_NAME} python=3.9 --yes
 conda init bash
@@ -69,6 +69,7 @@ export LLVM_DIR=${USE_LLVM}/lib/cmake/llvm
 
 # =========== Install Ipex ==========
 cd ${WORKDIR}
+# intel-extension-for-pytorch: extend the official PyTorch that can easily obtain performance on Intel platform
 git clone --branch llm_feature_branch https://github.com/intel/intel-extension-for-pytorch ipex-cpu
 cd ipex-cpu
 export IPEX_DIR=${PWD}
@@ -76,7 +77,6 @@ git submodule sync
 # 子模块没有安装全
 git submodule update --init --recursive
 cp ${DIR}/llm_feature_updated.diff .
-# 没有选择yes
 patch -p1 < llm_feature_updated.diff
 
 export DNNL_GRAPH_BUILD_COMPILER_BACKEND=1
@@ -102,7 +102,6 @@ pip install transformers==4.28.1
 
 # ============ Install loadgen ==========
 cd ${WORKDIR}
-# 硬盘没有空间了
 git clone https://github.com/mlcommons/inference.git mlperf_inference
 cd mlperf_inference
 export MLPERF_INFERENCE_ROOT=${PWD}
@@ -117,5 +116,6 @@ cp ${MLPERF_INFERENCE_ROOT}/mlperf.conf ${DIR}/
 
 # ======== Build utils =======
 cd ${DIR}/utils
+# 运行setup.py文件，根据其中的配置来安装包
 python -m pip install .
 
